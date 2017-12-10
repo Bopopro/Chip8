@@ -13,7 +13,8 @@ CC	= gcc -g3
 CFLAGS	+= -Iincludes
 
 SRCS	+= srcs/main.c \
-	   srcs/chip8.c 
+	   srcs/chip8.c \
+	   srcs/opcodes.c
 
 OBJS	= $(SRCS:.c=.o)
 

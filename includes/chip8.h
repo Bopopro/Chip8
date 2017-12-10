@@ -21,5 +21,15 @@ typedef struct	s_cpu {
   uint16_t	stack[STACK_LENGTH];
 }		t_cpu;
 
-t_cpu	*c8_init_chip8();
-void	c8_dump_memory(t_cpu *cpu);
+typedef struct	s_variable {
+  uint16_t	nnn;
+  uint8_t	n;
+  uint8_t	x;
+  uint8_t	y;
+  uint8_t	kk;
+}		t_variable;
+
+t_cpu		*c8_init_chip8();
+void		c8_dump_memory(t_cpu *cpu);
+t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode);
+void		c8_start(t_cpu *cpu);
