@@ -79,6 +79,7 @@ void	c8_start(t_cpu *cpu) {
   uint16_t	c_opcode = 0x0;
 
   while (cpu->pc < RAM - 1 && cpu->pc >= 0) {
+    //c8_dump_memory(cpu);
     c_opcode = (cpu->mem[cpu->pc] << 8) | cpu->mem[cpu->pc + 1];
     cpu->pc += 2;
     //printf("[DEBUG][PC] %d\n", cpu->pc);
