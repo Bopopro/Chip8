@@ -10,6 +10,14 @@
 # define C8_FAILURE		(-1)
 # define C8_SUCCESS		(0)
 
+typedef struct	s_variable {
+  uint16_t	nnn;
+  uint8_t	n;
+  uint8_t	x;
+  uint8_t	y;
+  uint8_t	kk;
+}		t_variable;
+
 typedef struct	s_cpu {
   uint8_t	mem[RAM];
   uint8_t	reg[REGISTER_LENGTH];
@@ -19,15 +27,8 @@ typedef struct	s_cpu {
   uint16_t	pc;
   uint8_t	sp;
   uint16_t	stack[STACK_LENGTH];
+  t_variable	vars;
 }		t_cpu;
-
-typedef struct	s_variable {
-  uint16_t	nnn;
-  uint8_t	n;
-  uint8_t	x;
-  uint8_t	y;
-  uint8_t	kk;
-}		t_variable;
 
 t_cpu		*c8_init_chip8();
 void		c8_dump_memory(t_cpu *cpu);

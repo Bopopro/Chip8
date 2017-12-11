@@ -42,13 +42,39 @@ const t_opcodes	g_opcodes[OPCODES_LENGTH] = {
 int	op_0XXX(t_cpu *cpu){}
 int	op_00E0(t_cpu *cpu){}
 int	op_00EE(t_cpu *cpu){}
-int	op_1XXX(t_cpu *cpu){}
-int	op_2XXX(t_cpu *cpu){}
-int	op_3XXX(t_cpu *cpu){}
+
+int	op_1XXX(t_cpu *cpu){
+  cpu->pc = cpu->vars.nnn;
+  printf("[DEBUG][1XXX]Jump: %d\n", cpu->pc);
+}
+
+int	op_2XXX(t_cpu *cpu){
+  cpu->stack[cpu->sp] = cpu->pc;
+  cpu->sp++;
+  cpu->pc = cpu->vars.nnn;
+  printf("[DEBUG][2XXX]Jump: %d Sp: %d TopStack: %d\n", cpu->pc, cpu->sp, cpu->stack[cpu->sp - 1]);
+}
+
+int	op_3XXX(t_cpu *cpu){
+  if (cpu->reg[cpu->vars.x] == cpu->vars.kk) {
+    cpu->pc++;
+    printf("[DEBUG][3XXX]reg: %d val: %d\n", cpu->vars.x, cpu->vars.kk);
+  }
+}
+
 int	op_4XXX(t_cpu *cpu){}
 int	op_5XXX(t_cpu *cpu){}
-int	op_6XXX(t_cpu *cpu){}
-int	op_7XXX(t_cpu *cpu){}
+
+int	op_6XXX(t_cpu *cpu){
+  cpu->reg[cpu->vars.x] = cpu->vars.kk;
+  printf("[DEBUG][6XXX]reg: %d val: %d\n", cpu->vars.x, cpu->vars.kk);
+}
+
+int	op_7XXX(t_cpu *cpu){
+  cpu->reg[cpu->vars.x] += cpu->vars.kk;
+  printf("[DEBUG][7XXX]reg: %d add: %d val: %d\n", cpu->vars.x, cpu->vars.kk, cpu->reg[cpu->vars.x]);
+}
+
 int	op_8XX0(t_cpu *cpu){}
 int	op_8XX1(t_cpu *cpu){}
 int	op_8XX2(t_cpu *cpu){}
@@ -59,10 +85,19 @@ int	op_8XX6(t_cpu *cpu){}
 int	op_8XX7(t_cpu *cpu){}
 int	op_8XXE(t_cpu *cpu){}
 int	op_9XXX(t_cpu *cpu){}
-int	op_AXXX(t_cpu *cpu){}
+
+int	op_AXXX(t_cpu *cpu){
+  cpu->I = cpu->vars.nnn;
+  printf("[DEBUG][AXXX]reg: I val: %d\n", cpu->I);
+}
+
 int	op_BXXX(t_cpu *cpu){}
 int	op_CXXX(t_cpu *cpu){}
-int	op_DXXX(t_cpu *cpu){}
+
+int	op_DXXX(t_cpu *cpu){
+  printf("[DEBUG][DXXX] Not Implemented\n");
+}
+
 int	op_EX9E(t_cpu *cpu){}
 int	op_EXA1(t_cpu *cpu){}
 int	op_FXX7(t_cpu *cpu){}

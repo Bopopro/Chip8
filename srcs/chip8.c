@@ -69,8 +69,8 @@ t_cpu *c8_init_chip8(const char * const filepath) {
 t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode) {
   var->nnn = opcode & 0x0FFF;
   var->n = opcode & 0x000F;
-  var->x = (opcode & 0x0F00) >> sizeof(uint8_t);
-  var->y = (opcode & 0x00F0) >> (sizeof(uint8_t) / 2);
+  var->x = (opcode & 0x0F00) >> 8;
+  var->y = (opcode & 0x00F0) >> 4;
   var->kk = opcode & 0x00FF;
   return (var);
 }
@@ -78,16 +78,18 @@ t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode) {
 void	c8_start(t_cpu *cpu) {
   uint16_t	c_opcode = 0x0;
 
-  int i = PRG_START;
-  while (i < PRG_START + 100) {
+  while (cpu->pc < RAM - 1 && cpu->pc >= 0) {
     c_opcode = (cpu->mem[cpu->pc] << 8) | cpu->mem[cpu->pc + 1];
+    cpu->pc += 2;
+    //printf("[DEBUG][PC] %d\n", cpu->pc);
     for (uint8_t j = 0; j < OPCODES_LENGTH; j++) {
       if ((c_opcode & g_opcodes[j].mask) == g_opcodes[j].code) {
+        c8_actualise_var(&cpu->vars, c_opcode);
+        //printf("[DEBUG][J] %d\n", j);
         g_opcodes[j].op(cpu);
         break;
       }
     }
-    cpu->pc += 2;
-    i++;
   }
+    printf("ADFTER\n");
 }

@@ -3,7 +3,7 @@
 # include <stdlib.h>
 # include "chip8.h"
 
-# define OPCODES_LENGTH	(36)
+# define OPCODES_LENGTH	(35)
 
 
 typedef struct	s_opcodes {
