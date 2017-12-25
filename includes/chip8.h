@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+#include "window.h"
 
 # define RAM			(4096)
 # define PRG_START		(0x200)
@@ -33,4 +35,4 @@ typedef struct	s_cpu {
 t_cpu		*c8_init_chip8();
 void		c8_dump_memory(t_cpu *cpu);
 t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode);
-void		c8_start(t_cpu *cpu);
+void		c8_start(t_cpu *cpu, t_window *win);

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include "window.h"
 #include "opcodes.h"
 #include "chip8.h"
 
@@ -30,6 +32,7 @@ static void	c8_init_font(t_cpu *cpu) {
 }
 
 void	c8_dump_memory(t_cpu *cpu) {
+  printf("[DUMP][PC] %d\n", cpu->pc);
   for (uint16_t i = 0; i < RAM; i++) {
     if (i == cpu->pc)
       printf("\e[31m%2x\e[0m ", cpu->mem[i]);
@@ -75,22 +78,28 @@ t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode) {
   return (var);
 }
 
-void	c8_start(t_cpu *cpu) {
+void	c8_start(t_cpu *cpu, t_window *win) {
   uint16_t	c_opcode = 0x0;
 
-  while (cpu->pc < RAM - 1 && cpu->pc >= 0) {
-    //c8_dump_memory(cpu);
+  while (sfRenderWindow_isOpen(win->window)) {
     c_opcode = (cpu->mem[cpu->pc] << 8) | cpu->mem[cpu->pc + 1];
     cpu->pc += 2;
-    //printf("[DEBUG][PC] %d\n", cpu->pc);
     for (uint8_t j = 0; j < OPCODES_LENGTH; j++) {
       if ((c_opcode & g_opcodes[j].mask) == g_opcodes[j].code) {
         c8_actualise_var(&cpu->vars, c_opcode);
-        //printf("[DEBUG][J] %d\n", j);
-        g_opcodes[j].op(cpu);
+        g_opcodes[j].op(cpu, win);
         break;
       }
     }
+    if (cpu->delay > 0)
+      cpu->delay--;
+    sfTexture_updateFromPixels(win->texture, win->fb->pixels, WIDTH, HEIGHT, 0, 0);
+    while (sfRenderWindow_pollEvent(win->window, &win->event)) {
+      if (win->event.type == sfEvtClosed || sfKeyboard_isKeyPressed(sfKeyEscape))
+        sfRenderWindow_close(win->window);
+    }
+    sfRenderWindow_clear(win->window, sfBlack);
+    sfRenderWindow_drawSprite(win->window, win->sprite, NULL);
+    sfRenderWindow_display(win->window);
   }
-    printf("ADFTER\n");
 }

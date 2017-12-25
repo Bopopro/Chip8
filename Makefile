@@ -8,13 +8,14 @@
 ## Last update Fri Apr 28 19:09:58 2017 Bilel Fourati
 ##
 
-CC	= gcc -g3
+CC	= gcc -g3 -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio
 
 CFLAGS	+= -Iincludes
 
 SRCS	+= srcs/main.c \
 	   srcs/chip8.c \
-	   srcs/opcodes.c
+	   srcs/opcodes.c \
+	   srcs/window.c
 
 OBJS	= $(SRCS:.c=.o)
 
