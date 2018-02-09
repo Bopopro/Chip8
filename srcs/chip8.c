@@ -80,7 +80,9 @@ t_variable	*c8_actualise_var(t_variable *var, uint16_t opcode) {
 
 void	c8_start(t_cpu *cpu, t_window *win) {
   uint16_t	c_opcode = 0x0;
+  sfClock	*c8_clock;
 
+  c8_clock = sfClock_create();
   while (sfRenderWindow_isOpen(win->window)) {
     c_opcode = (cpu->mem[cpu->pc] << 8) | cpu->mem[cpu->pc + 1];
     cpu->pc += 2;
@@ -90,6 +92,10 @@ void	c8_start(t_cpu *cpu, t_window *win) {
         g_opcodes[j].op(cpu, win);
         break;
       }
+    }
+    if (cpu->delay > 0 && sfClock_getElapsedTime(c8_clock).microseconds >= 16) {
+      cpu->delay--;
+      sfClock_restart(c8_clock);
     }
     if (cpu->delay > 0)
       cpu->delay--;

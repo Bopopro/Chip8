@@ -3,6 +3,25 @@
 #include <stdlib.h>
 #include "opcodes.h"
 
+static const sfKeyCode g_keyboard[] = {
+  sfKeyX,
+  sfKeyNum1,
+  sfKeyNum2,
+  sfKeyNum3,
+  sfKeyA,
+  sfKeyZ,
+  sfKeyE,
+  sfKeyQ,
+  sfKeyS,
+  sfKeyD,
+  sfKeyW,
+  sfKeyC,
+  sfKeyNum4,
+  sfKeyR,
+  sfKeyF,
+  sfKeyV,
+};
+
 const t_opcodes	g_opcodes[OPCODES_LENGTH] = {
   {0x0000, 0x0FFF, &op_0XXX},
   {0xFFFF, 0x00E0, &op_00E0},
@@ -232,12 +251,21 @@ int	op_DXXX(t_cpu *cpu, t_window *win){
 
 int	op_EX9E(t_cpu *cpu, t_window *win){
   (void)win;
-  printf("[DEBUG][EX9E] Not Implemented\n");
+
+  if (sfKeyboard_isKeyPressed(g_keyboard[cpu->reg[cpu->vars.x]])) {
+    printf("[DEBUG][EX9E][1] Pressed \n");
+    cpu->pc += 2;
+  }
+  printf("[DEBUG][EX9E] Val: %d \n", cpu->reg[cpu->vars.x]);
   return (0);
 }
 int	op_EXA1(t_cpu *cpu, t_window *win){
   (void)win;
-  printf("[DEBUG][EXA1] Not Implemented\n");
+  if (!sfKeyboard_isKeyPressed(g_keyboard[cpu->reg[cpu->vars.x]])) {
+    printf("[DEBUG][EX9E][1] Pressed \n");
+    cpu->pc += 2;
+  }
+  printf("[DEBUG][EX9E] Val: %d \n", cpu->reg[cpu->vars.x]);
   return (0);
 }
 int	op_FX07(t_cpu *cpu, t_window *win){
@@ -248,7 +276,15 @@ int	op_FX07(t_cpu *cpu, t_window *win){
 }
 int	op_FX0A(t_cpu *cpu, t_window *win){
   (void)win;
-  printf("[DEBUG][FX0A] Not Implemented\n");
+  while (sfRenderWindow_pollEvent(win->window, &win->event)) {
+    for (size_t i = 0; i < sizeof(g_keyboard) / sizeof(sfKeyCode); i++) {
+      if (sfKeyboard_isKeyPressed(g_keyboard[i])) {
+        cpu->reg[cpu->vars.x] = i;
+        break;
+      }
+    }
+  }
+  printf("[DEBUG][FX0A]Key: %d\n", cpu->reg[cpu->vars.x]);
   return (0);
 }
 int	op_FX15(t_cpu *cpu, t_window *win){

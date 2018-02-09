@@ -10,6 +10,8 @@ int main(int ac, char **av)
   (void)ac;
   win = c8_init_window();
   cpu = c8_init_chip8(av[1]);
+  if (!win || !cpu)
+    return (C8_FAILURE);
   //c8_dump_memory(cpu);
   c8_start(cpu, win);
   free(cpu);
